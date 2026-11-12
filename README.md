@@ -4,7 +4,7 @@ A single-page privacy-awareness tool. Open it and it shows what any website can 
 
 Everything runs in your browser. There is no backend, no build step, no framework and no third-party code.
 
-**Live demo:** _link added after deployment_
+**Live demo:** https://saumyadhote.github.io/browser-tells-all/
 
 ## Signals shown (18)
 
