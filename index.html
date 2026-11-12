@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+    Content Security Policy: the browser itself enforces that this page can only
+    load its own CSS/JS and can never open a network connection (no fetch, no
+    analytics, no external fonts or images). This backs up the privacy promise.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+
+  <title>What Your Browser Tells Websites</title>
+  <meta name="description" content="A privacy-awareness tool that shows what any website can learn about your browser instantly, and explains the tracking risk of each signal.">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Inline SVG favicon so the browser does not request /favicon.ico -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%234f46e5'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#signals">Skip to your browser signals</a>
+
+  <header class="hero">
+    <div class="container">
+      <p class="eyebrow">Privacy awareness tool</p>
+      <h1>What Your Browser Tells Websites</h1>
+      <p class="lead">
+        The moment you open a web page, it can read dozens of small details about your
+        device and browser, without asking. Here is what this page can see about you
+        right now, and why each detail matters.
+      </p>
+      <p class="privacy-note">
+        <span aria-hidden="true">🔒</span>
+        <strong>Nothing leaves your browser.</strong>
+        Everything below is computed on your device. This page makes no network
+        requests after it loads: no analytics, no cookies, no tracking.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Fingerprint uniqueness meter -->
+    <section class="meter-section" aria-labelledby="meter-title">
+      <h2 id="meter-title">Fingerprint uniqueness <span class="badge-estimate">heuristic estimate</span></h2>
+      <div class="meter-row">
+        <p class="meter-score"><span id="meter-value">–</span><span class="meter-max">/100</span></p>
+        <p class="meter-label" id="meter-label">Calculating…</p>
+      </div>
+      <div class="meter-track" id="meter" role="meter"
+           aria-labelledby="meter-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="meter-fill" id="meter-fill"></div>
+      </div>
+      <p class="meter-help">
+        This is <strong>not a measurement</strong> of how unique you are. It is a rough score
+        based on how many identifying signals your browser exposes, weighted by how
+        identifying each one tends to be (Low = 1, Medium = 2, High = 3 points).
+        Real uniqueness depends on how many other people share your exact values,
+        which can only be known by comparing against a large dataset.
+      </p>
+    </section>
+
+    <!-- Signal cards are rendered here by script.js -->
+    <section aria-labelledby="signals-title">
+      <h2 id="signals-title">Your browser signals</h2>
+      <p class="section-intro">
+        Each card shows a live value from your browser, how websites typically use it,
+        and how much it helps tell you apart from other visitors.
+      </p>
+      <ul class="cards" id="signals" tabindex="-1"></ul>
+      <noscript>
+        <p class="noscript">JavaScript is turned off, so this page cannot read any signals.
+        That is also true for most trackers: disabling JavaScript blocks the majority of fingerprinting.</p>
+      </noscript>
+    </section>
+
+    <section class="info" aria-labelledby="why-title">
+      <h2 id="why-title">Why this matters</h2>
+      <p>
+        Any single detail above is shared by millions of people. Combined, they can form a
+        <strong>browser fingerprint</strong>: a set of values that is often distinctive enough
+        to recognise the same browser across different visits and different websites.
+      </p>
+      <ul>
+        <li><strong>It works without cookies.</strong> Clearing cookies or using a private window does not change most of these values.</li>
+        <li><strong>It is invisible.</strong> There is no permission prompt and no banner. Any script on a page can read these values.</li>
+        <li><strong>It is used for more than ads.</strong> Fraud detection and bot prevention also rely on fingerprints, which is one reason browsers cannot simply remove these APIs.</li>
+      </ul>
+    </section>
+
+    <section class="info" aria-labelledby="reduce-title">
+      <h2 id="reduce-title">How to reduce your fingerprint</h2>
+      <p>The goal is to <strong>look like many other people</strong>, not to hide everything. Unusual settings can make you stand out more.</p>
+      <ul>
+        <li><strong>Use a browser with fingerprinting protection.</strong> Tor Browser makes users look alike; Brave randomises some values; Firefox and Safari include built-in fingerprinting protections.</li>
+        <li><strong>Keep your browser updated.</strong> Common, current versions blend in better than old or rare ones.</li>
+        <li><strong>Install fewer extensions</strong> and avoid heavily customised fonts or settings. Every unusual choice adds information.</li>
+        <li><strong>Use a reputable content blocker.</strong> Blocking known tracking scripts stops many of them from collecting a fingerprint in the first place.</li>
+        <li><strong>Turn on Global Privacy Control</strong> if your browser supports it. In some places, such as California, sites are legally required to treat it as an opt-out of selling your data.</li>
+        <li><strong>Remember the bigger picture.</strong> Your IP address is visible to every site you visit and is not shown here. A VPN or Tor hides it from the sites themselves.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built with plain HTML, CSS and JavaScript. Open source under the MIT License.
+        <a href="https://github.com/saumyadhote/browser-tells-all">View the source on GitHub</a>.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,361 @@
+/* =========================================================
+   What Your Browser Tells Websites — styles
+   Colours are defined once as CSS variables, then redefined
+   for dark mode. System fonts only (no font downloads).
+   ========================================================= */
+
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --text: #16181d;
+  --muted: #4b5262;
+  --border: #dfe2ea;
+  --accent: #4338ca;
+  --accent-soft: #eef0ff;
+  --hero-bg: linear-gradient(135deg, #eef0ff 0%, #f6f7fb 60%);
+
+  /* Identifiability tags: text + background pairs chosen for AA contrast */
+  --low-text: #166534;
+  --low-bg: #dcfce7;
+  --med-text: #854d0e;
+  --med-bg: #fef3c7;
+  --high-text: #991b1b;
+  --high-bg: #fee2e2;
+
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 2px 8px rgba(16, 24, 40, 0.04);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --text: #e8eaf0;
+    --muted: #a5abba;
+    --border: #2a2f3c;
+    --accent: #a5b4fc;
+    --accent-soft: #23264a;
+    --hero-bg: linear-gradient(135deg, #1b1e3d 0%, #0f1117 65%);
+
+    --low-text: #86efac;
+    --low-bg: #12301f;
+    --med-text: #fcd34d;
+    --med-bg: #3a2c0b;
+    --high-text: #fca5a5;
+    --high-bg: #3f1717;
+
+    --shadow: none;
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3 {
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Clear, visible focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  background: var(--hero-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 3.5rem 0 2.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+
+.lead {
+  font-size: 1.125rem;
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.privacy-note {
+  display: inline-block;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 62ch;
+}
+
+/* ---------- Sections ---------- */
+main {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+main > section {
+  margin-bottom: 2.5rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+.section-intro {
+  color: var(--muted);
+  margin-top: 0;
+  max-width: 70ch;
+}
+
+/* ---------- Uniqueness meter ---------- */
+.meter-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+}
+
+.badge-estimate {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin-left: 0.25rem;
+}
+
+.meter-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+}
+
+.meter-score {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.meter-max {
+  font-size: 1rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.meter-label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.meter-track {
+  height: 14px;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+  margin: 0.75rem 0 1rem;
+}
+
+.meter-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.8s ease-out;
+}
+
+/* Fill colour matches the score band (set by script.js) */
+.meter-fill.band-low { background: #16a34a; }
+.meter-fill.band-medium { background: #d97706; }
+.meter-fill.band-high { background: #dc2626; }
+
+.meter-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 75ch;
+}
+
+/* ---------- Signal cards ---------- */
+.cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.2rem;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.card-value {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+  overflow-wrap: anywhere; /* long values like GPU names must not overflow on mobile */
+}
+
+.card-value.unavailable {
+  font-family: var(--font);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.card-use {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.card-use strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Identifiability tag: the word is always shown, so colour is never the only cue */
+.tag {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.tag-low {
+  color: var(--low-text);
+  background: var(--low-bg);
+}
+
+.tag-medium {
+  color: var(--med-text);
+  background: var(--med-bg);
+}
+
+.tag-high {
+  color: var(--high-text);
+  background: var(--high-bg);
+}
+
+/* ---------- Info sections ---------- */
+.info {
+  max-width: 75ch;
+}
+
+.info ul {
+  padding-left: 1.25rem;
+}
+
+.info li {
+  margin-bottom: 0.6rem;
+}
+
+.noscript {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Respect reduced-motion preference ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .meter-fill {
+    transition: none;
+  }
+}
