@@ -1,361 +1,475 @@
 /* =========================================================
    What Your Browser Tells Websites — styles
-   Colours are defined once as CSS variables, then redefined
-   for dark mode. System fonts only (no font downloads).
+   Modelled on macOS Terminal's "Homebrew" profile: black
+   background, bright green Andale Mono text, with the blue
+   "==>" headings that `brew` prints. Always dark, by design.
+   System fonts only (no font downloads).
    ========================================================= */
 
 :root {
-  --bg: #f6f7fb;
-  --surface: #ffffff;
-  --text: #16181d;
-  --muted: #4b5262;
-  --border: #dfe2ea;
-  --accent: #4338ca;
-  --accent-soft: #eef0ff;
-  --hero-bg: linear-gradient(135deg, #eef0ff 0%, #f6f7fb 60%);
-
-  /* Identifiability tags: text + background pairs chosen for AA contrast */
-  --low-text: #166534;
-  --low-bg: #dcfce7;
-  --med-text: #854d0e;
-  --med-bg: #fef3c7;
-  --high-text: #991b1b;
-  --high-bg: #fee2e2;
-
-  --radius: 14px;
-  --shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 2px 8px rgba(16, 24, 40, 0.04);
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --bg: #000000;
+  --page: #111111;
+  --fg: #28fe14;          /* Homebrew profile text colour */
+  --fg-dim: #1fae11;      /* comments, secondary text (AA on black) */
+  --white: #f2f2f2;       /* bold headings, like brew's ohai text */
+  --blue: #5ea1ff;        /* "==>" arrows */
+  --yellow: #f5d547;      /* Warning: */
+  --red: #ff6b5e;
+  --bar: #2b2b2b;         /* window title bar */
+  --bar-text: #a8a8a8;
+  --border: #333333;
+  --mono: "Andale Mono", Menlo, Monaco, ui-monospace, "SF Mono", Consolas, "Liberation Mono", monospace;
+  --label: 17ch;          /* left column width in the listings */
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1117;
-    --surface: #181b24;
-    --text: #e8eaf0;
-    --muted: #a5abba;
-    --border: #2a2f3c;
-    --accent: #a5b4fc;
-    --accent-soft: #23264a;
-    --hero-bg: linear-gradient(135deg, #1b1e3d 0%, #0f1117 65%);
-
-    --low-text: #86efac;
-    --low-bg: #12301f;
-    --med-text: #fcd34d;
-    --med-bg: #3a2c0b;
-    --high-text: #fca5a5;
-    --high-bg: #3f1717;
-
-    --shadow: none;
-  }
-}
-
-/* ---------- Base ---------- */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--page);
+}
+
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 1rem;
-  line-height: 1.6;
+  padding: 32px 16px;
+  background: var(--page);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.55;
   -webkit-text-size-adjust: 100%;
 }
 
-h1, h2, h3 {
-  line-height: 1.25;
-  margin: 0 0 0.5rem;
+::selection {
+  background: var(--fg);
+  color: var(--bg);
 }
 
 a {
-  color: var(--accent);
+  color: var(--blue);
 }
 
-/* Clear, visible focus ring for keyboard users */
 :focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
 }
 
-.container {
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 16px;
+strong {
+  color: var(--white);
+  font-weight: 700;
+}
+
+p,
+ul {
+  margin: 0 0 0.9em;
 }
 
 .skip-link {
   position: absolute;
   left: 16px;
   top: -100px;
-  background: var(--surface);
-  color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.4rem 0.8rem;
   z-index: 10;
 }
 
 .skip-link:focus {
-  top: 16px;
+  top: 8px;
 }
 
-/* ---------- Hero ---------- */
-.hero {
-  background: var(--hero-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 3.5rem 0 2.5rem;
-}
-
-.eyebrow {
-  margin: 0 0 0.5rem;
-  color: var(--accent);
-  font-weight: 600;
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.hero h1 {
-  font-size: clamp(1.9rem, 5vw, 3rem);
-  letter-spacing: -0.02em;
-  max-width: 18ch;
-}
-
-.lead {
-  font-size: 1.125rem;
-  color: var(--muted);
-  max-width: 62ch;
-  margin: 0.75rem 0 1.25rem;
-}
-
-.privacy-note {
-  display: inline-block;
-  margin: 0;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  max-width: 62ch;
-}
-
-/* ---------- Sections ---------- */
-main {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
-}
-
-main > section {
-  margin-bottom: 2.5rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-}
-
-.section-intro {
-  color: var(--muted);
-  margin-top: 0;
-  max-width: 70ch;
-}
-
-/* ---------- Uniqueness meter ---------- */
-.meter-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-}
-
-.badge-estimate {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  margin-left: 0.25rem;
-}
-
-.meter-row {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-}
-
-.meter-score {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.meter-max {
-  font-size: 1rem;
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.meter-label {
-  margin: 0;
-  font-weight: 600;
-}
-
-.meter-track {
-  height: 14px;
-  border-radius: 999px;
-  background: var(--border);
-  overflow: hidden;
-  margin: 0.75rem 0 1rem;
-}
-
-.meter-fill {
-  height: 100%;
-  width: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  transition: width 0.8s ease-out;
-}
-
-/* Fill colour matches the score band (set by script.js) */
-.meter-fill.band-low { background: #16a34a; }
-.meter-fill.band-medium { background: #d97706; }
-.meter-fill.band-high { background: #dc2626; }
-
-.meter-help {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-  max-width: 75ch;
-}
-
-/* ---------- Signal cards ---------- */
-.cards {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-}
-
-.card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.1rem 1.2rem;
-}
-
-.card-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.card h3 {
-  font-size: 1rem;
-  margin: 0;
-}
-
-.card-value {
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 0.95rem;
+/* ---------- Terminal window ---------- */
+.term {
+  max-width: 980px;
+  margin: 0 auto;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.45rem 0.6rem;
-  overflow-wrap: anywhere; /* long values like GPU names must not overflow on mobile */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
-.card-value.unavailable {
-  font-family: var(--font);
-  font-style: italic;
-  color: var(--muted);
+.term-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  background: var(--bar);
+  border-bottom: 1px solid #1a1a1a;
+  font-family: -apple-system, system-ui, sans-serif;
+  font-size: 12.5px;
+  color: var(--bar-text);
 }
 
-.card-use {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.92rem;
+.lights {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  gap: 8px;
 }
 
-.card-use strong {
-  color: var(--text);
-  font-weight: 600;
+.lights span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
 }
 
-/* Identifiability tag: the word is always shown, so colour is never the only cue */
-.tag {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+.lights span:nth-child(2) { background: #febc2e; }
+.lights span:nth-child(3) { background: #28c840; }
+
+.term-title {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 140px);
 }
 
-.tag-low {
-  color: var(--low-text);
-  background: var(--low-bg);
+.term-body {
+  padding: 14px 18px 22px;
 }
 
-.tag-medium {
-  color: var(--med-text);
-  background: var(--med-bg);
+.term-body section {
+  margin-top: 1.6em;
 }
 
-.tag-high {
-  color: var(--high-text);
-  background: var(--high-bg);
+.term-body section:focus {
+  outline: none;
 }
 
-/* ---------- Info sections ---------- */
-.info {
-  max-width: 75ch;
+/* ---------- Text roles ---------- */
+.dim {
+  color: var(--fg-dim);
 }
 
-.info ul {
-  padding-left: 1.25rem;
+.cmd {
+  color: var(--white);
+  margin-bottom: 0.5em;
+  overflow-wrap: anywhere;
 }
 
-.info li {
-  margin-bottom: 0.6rem;
+.prompt {
+  color: var(--fg);
+  margin-right: 0.5ch;
 }
 
-.noscript {
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
+.banner {
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 0.6em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* brew's "ohai" heading: blue ==> then bold white text */
+.ohai {
+  font-size: 1em;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 0.6em;
+}
+
+.ohai::before,
+.arrow {
+  content: "==> ";
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.ok {
+  color: var(--fg);
+}
+
+.ok span {
+  color: var(--fg);
+  margin-right: 0.5ch;
+}
+
+.warn {
+  color: var(--fg-dim);
+}
+
+.warn-label {
+  color: var(--yellow);
+  font-weight: 700;
+}
+
+.kbd {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+.summary {
+  color: var(--white);
+  border-left: 2px solid var(--fg);
+  padding-left: 1.5ch;
+  max-width: 88ch;
+}
+
+/* ---------- Shared list layout: label column + value ---------- */
+.inferences,
+.rarity,
+.signals,
+.evidence {
+  list-style: none;
+  padding: 0;
+}
+
+/* ---------- Inferences ---------- */
+.inf {
+  display: grid;
+  grid-template-columns: var(--label) 1fr;
+  column-gap: 1ch;
+  margin-bottom: 0.9em;
+}
+
+.inf-label {
+  color: var(--fg-dim);
+}
+
+.inf-label::after {
+  content: ":";
+}
+
+.inf-value {
+  color: var(--white);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.inf-conf,
+.inf-why {
+  grid-column: 2;
+}
+
+.inf-conf {
+  white-space: pre;
+}
+
+.c-high { color: var(--fg); }
+.c-mid { color: var(--yellow); }
+.c-low { color: var(--red); }
+
+.inf-why summary {
+  cursor: pointer;
+  color: var(--blue);
+  width: fit-content;
+  list-style: none;
+}
+
+.inf-why summary::-webkit-details-marker {
+  display: none;
+}
+
+.inf-why summary::before {
+  content: "▸ ";
+}
+
+.inf-why[open] summary::before {
+  content: "▾ ";
+}
+
+.evidence {
+  margin: 0.3em 0 0;
+}
+
+.evidence li {
+  color: var(--fg-dim);
+  padding-left: 2ch;
+  text-indent: -2ch;
+  overflow-wrap: anywhere;
+}
+
+.evidence li::before {
+  content: "└ ";
+  color: var(--fg-dim);
+}
+
+/* ---------- Rarity table ---------- */
+.rarity li {
+  display: grid;
+  grid-template-columns: var(--label) minmax(0, 1fr) 10ch 16ch;
+  column-gap: 1ch;
+}
+
+.rar-name {
+  color: var(--fg-dim);
+}
+
+.rar-value {
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rar-bits {
+  text-align: right;
+}
+
+.rar-bar {
+  color: var(--fg);
+}
+
+.rar-hidden .rar-value,
+.rar-hidden .rar-bits {
+  color: var(--fg-dim);
+}
+
+.raw-sum {
+  margin: 0.6em 0 0;
+}
+
+.total {
+  color: var(--white);
+  font-weight: 700;
+  margin-top: 0.6em;
+}
+
+/* ---------- Raw signals ---------- */
+.signals li {
+  display: grid;
+  grid-template-columns: var(--label) 1fr auto;
+  column-gap: 1ch;
+  margin-bottom: 0.55em;
+}
+
+.sig-name {
+  color: var(--fg-dim);
+}
+
+.sig-value {
+  color: var(--white);
+  overflow-wrap: anywhere;
+}
+
+.sig-value.na {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+.sig-tag {
+  font-weight: 700;
+}
+
+.tag-low { color: var(--fg); }
+.tag-medium { color: var(--yellow); }
+.tag-high { color: var(--red); }
+
+.sig-use {
+  grid-column: 2 / -1;
+  color: var(--fg-dim);
+}
+
+/* ---------- Prose bullets ---------- */
+.bullets {
+  list-style: none;
+  padding: 0;
+  max-width: 88ch;
+}
+
+.bullets li {
+  padding-left: 2ch;
+  text-indent: -2ch;
+  margin-bottom: 0.5em;
+}
+
+.bullets li::before {
+  content: "* ";
+  color: var(--blue);
+}
+
+/* ---------- Cursor ---------- */
+.last {
+  margin: 1.6em 0 0;
+}
+
+.cursor {
+  color: var(--fg);
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 /* ---------- Footer ---------- */
 .site-footer {
-  border-top: 1px solid var(--border);
-  padding: 1.5rem 0;
-  color: var(--muted);
-  font-size: 0.9rem;
+  max-width: 980px;
+  margin: 14px auto 0;
+  color: #8a8a8a;
+  font-size: 12px;
+  text-align: center;
 }
 
-/* ---------- Respect reduced-motion preference ---------- */
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  color: #b0b0b0;
+}
+
+/* ---------- Phones: stack the label column ---------- */
+@media (max-width: 640px) {
+  body {
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  .term-body {
+    padding: 12px 12px 18px;
+  }
+
+  .inf,
+  .signals li {
+    grid-template-columns: 1fr;
+  }
+
+  .inf-conf,
+  .inf-why,
+  .sig-use {
+    grid-column: 1;
+  }
+
+  .inf-conf {
+    white-space: normal;
+  }
+
+  .sig-name::after,
+  .inf-label::after {
+    content: ":";
+  }
+
+  .rarity li {
+    grid-template-columns: minmax(0, 1fr) 9ch;
+    margin-bottom: 0.4em;
+  }
+
+  .rar-value {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .rar-bar {
+    display: none;
+  }
+
+  .term-title {
+    max-width: calc(100% - 90px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .meter-fill {
-    transition: none;
+  .cursor {
+    animation: none;
   }
 }

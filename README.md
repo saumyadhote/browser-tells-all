@@ -1,62 +1,50 @@
 # What Your Browser Tells Websites
 
-A single-page privacy-awareness tool. Open it and it shows what any website can learn about your browser and device instantly, without asking, and explains in plain English how each signal is used for tracking.
+A privacy-awareness tool that shows you **how a tracker sees you**. It reads the signals any website gets from your browser without asking, then does what trackers do with them: it combines weak clues into conclusions about you (your likely device model, country, desk setup and hardware age) and **shows the evidence and a confidence level for every guess**.
 
-Everything runs in your browser. There is no backend, no build step, no framework and no third-party code.
+Everything runs in your browser. No backend, no build step, no framework, no third-party code, and a Content-Security-Policy that blocks network connections outright.
 
 **Live demo:** https://saumyadhote.github.io/browser-tells-all/
 
-## Signals shown (18)
+The page is styled like a macOS Terminal window using the "Homebrew" profile, with output written like a command-line tool.
 
-| # | Signal | Identifiability | Source API |
-|---|--------|-----------------|------------|
-| 1 | Screen size & pixel ratio | Medium | `screen.width/height`, `devicePixelRatio` |
-| 2 | Browser window size | Medium | `innerWidth/innerHeight` |
-| 3 | Color depth | Low | `screen.colorDepth` |
-| 4 | Time zone (and UTC offset) | Medium | `Intl.DateTimeFormat().resolvedOptions()` |
-| 5 | Languages | Medium | `navigator.languages` |
-| 6 | Platform / OS | Low | `navigator.userAgentData` or `navigator.platform` |
-| 7 | Browser & version | Medium | `navigator.userAgentData` or user-agent string |
-| 8 | CPU cores | Medium | `navigator.hardwareConcurrency` |
-| 9 | Device memory | Low | `navigator.deviceMemory` (Chromium only) |
-| 10 | Touch support | Low | `navigator.maxTouchPoints` |
-| 11 | Color scheme preference | Low | `prefers-color-scheme` media query |
-| 12 | Reduced-motion preference | Low | `prefers-reduced-motion` media query |
-| 13 | Connection type | Low | `navigator.connection` (mostly Chromium) |
-| 14 | Do Not Track | Low | `navigator.doNotTrack` |
-| 15 | Global Privacy Control | Low | `navigator.globalPrivacyControl` |
-| 16 | Cookies enabled | Low | `navigator.cookieEnabled` |
-| 17 | Canvas fingerprint hash | High | Canvas 2D drawing + `toDataURL()`, hashed with FNV-1a |
-| 18 | Graphics card (WebGL) | High | WebGL `RENDERER` / `WEBGL_debug_renderer_info` |
+## What it infers
 
-If an API is not supported in the visitor's browser, the card shows **"Not available in your browser"** instead of an error.
+| Inference | Example output | How |
+|---|---|---|
+| **Device model** | `MacBook Air 13.6" (2022 or later) with Apple M2` | WebGL GPU name + screen size + pixel ratio, matched against tables of default display settings per model |
+| | `Samsung Galaxy S23 Ultra (SM-S918B)` | Chromium's User-Agent Client Hints hand any script the exact model code; Samsung codes are decoded |
+| | `iPhone 14 Pro, 15, 15 Pro or 16` | Safari hides the GPU, so the portrait screen size at 3x narrows it to a few models |
+| | `a Windows 11 laptop with NVIDIA RTX 30-series` | "Laptop" in the GPU name, Windows' default display scaling for laptop panels, touch support; `platformVersion` ≥ 13 means Windows 11 |
+| **Location (no IP address)** | `India`, `United States (US West Coast)` | Time zone → country table, cross-checked against your language list. `en-US` is treated as weak evidence because it's the worldwide default |
+| **Background** | `Portuguese speaker living in or visiting Germany` | Language and time zone point to different countries |
+| **Desk setup** | `a single screen, Dock auto-hidden, browser maximised` | `screen.isExtended`, the space the Dock/taskbar reserves (`screen` vs `availWidth/Height`), window size vs screen size |
+| **Hardware age** | `bought around 2022–2023` | GPU generation → release window |
 
-The Low/Medium/High tags are my own judgement of how much each signal tends to narrow down a visitor on its own. They are not measured values.
+Each inference returns `{ value, confidence, evidence[] }`. The page shows the evidence under **why?**. When clues conflict (say a screen size that only existed on Intel Macs alongside an Apple Silicon GPU), confidence drops and the evidence says why. When the browser hides a signal, the engine says so instead of guessing.
 
-## How the uniqueness meter works
+## How rare is your browser?
 
-The meter is a **heuristic estimate, not a measurement**.
+Each signal's value gets a rough share `p` (the fraction of web users who share it). That share becomes `-log2(p)` bits: a value half of all users share is worth 1 bit, and one in a thousand is about 10 bits.
 
-1. Each signal has a weight based on its tag: Low = 1 point, Medium = 2, High = 3.
-2. A signal earns its points if the browser exposes a value for it.
-3. Score = earned points ÷ maximum possible points × 100, rounded.
+Adding the bits up naively says almost everyone is "1 in 8 billion", because many signals describe the same thing. A MacBook Air always has a MacBook Air screen, GPU and core count. So signals are grouped (device, locale, everything else). Within a group the strongest signal counts in full and the rest count at 25%. This lands typical browsers near the ~18 bits that large studies (Panopticlick, AmIUnique) measured for real users. The page shows both the raw sum and the corrected total.
 
-With the current 18 signals the maximum is 28 points (10 Low, 6 Medium, 2 High). Bands: under 40 is "Lower exposure", 40 to 74 is "Moderate", 75 and above is "High".
+The shares in `data.js` are rough, rounded global web-usage figures. Read the result as "common vs. rare", not as a measurement.
 
-What this means: the score reflects **how much your browser exposes**, not how rare your values are. A browser that hides device memory, connection type and the GPU name scores lower than one that exposes all of them. Measuring real uniqueness would mean comparing your values against many other visitors, which needs a server and a dataset, and this project deliberately has neither.
+## Raw signals (21)
 
-The logic is in `calculateScore()` in `script.js`.
+Screen size and pixel ratio, usable screen area, window size, multiple monitors, color depth, time zone, languages, OS, browser, User-Agent Client Hints (model, OS version, CPU architecture), CPU cores, device memory, touch support, color scheme, reduced motion, connection type, Do Not Track, Global Privacy Control, cookies, canvas fingerprint hash, and WebGL GPU name.
+
+If an API isn't supported, the page shows "not available in your browser". It never shows an error.
 
 ## Privacy statement
 
-- All values are read and displayed locally. Nothing is sent, stored or logged.
+- All values are read, inferred and displayed locally. Nothing is sent, stored or logged.
 - No analytics, cookies, CDN fonts, external scripts or images.
 - A Content-Security-Policy `<meta>` tag (`connect-src 'none'`, `default-src 'none'`) makes the browser itself block any network connection the page might try to make.
-- **IP address and location are not shown.** A web page cannot read its own visitor's IP address without asking an external server, and that would break the "nothing leaves your browser" promise. Keep in mind that every site you visit does see your IP address.
+- **IP address and IP-based location are not used.** Reading them would need an external server. Every site you visit does see your IP address, though.
 
 ## Run locally
-
-No install or build needed.
 
 ```bash
 git clone https://github.com/saumyadhote/browser-tells-all.git
@@ -64,30 +52,34 @@ cd browser-tells-all
 open index.html   # or double-click index.html
 ```
 
-Opening the file directly works. Some values (such as cookies) can behave slightly differently on `file://` than on a real website.
-
 ## Project structure
 
 ```
-index.html   page structure, "Why this matters" and "How to reduce" sections
-style.css    layout, light/dark theme via CSS variables, responsive grid
-script.js    one function per signal, SIGNALS list, scoring, rendering
+index.html   the terminal window: --whoami, --rarity, --raw, man fingerprinting
+style.css    Homebrew-terminal theme, responsive grid
+data.js      lookup tables: Apple/iPhone/iPad screens, Samsung model codes,
+             GPU release eras, time zone → country, language → country, usage shares
+infer.js     the inference engine: pure functions over a facts object, no DOM
+script.js    collects raw facts from browser APIs and renders everything
 ```
+
+`infer.js` has no DOM access, so you can test it in Node by loading `data.js` and `infer.js` into a `vm` context and passing in fake facts.
 
 ## Limitations
 
-- The uniqueness score is a heuristic. It does not know how common your values are.
-- Browser support varies. Device memory and connection type are mostly Chromium-only, Global Privacy Control only exists in some browsers, and Safari has removed Do Not Track.
-- Browsers with fingerprinting protection (Tor Browser, Brave, Firefox and Safari in some modes) may add noise to the canvas, so the canvas hash can change between page loads. That is the protection working.
-- Browser and version detection relies on user-agent data, which browsers are intentionally reducing and which can be spoofed.
-- Real trackers use many more signals (installed fonts, audio processing, many WebGL parameters and more). This page shows a representative subset.
+- Device tables assume **default display scaling**. If you changed it, the model match fails and the engine says the model is unclear.
+- The tables cover common models, not every device. New models need new rows in `data.js`.
+- Client Hints (model, OS version) only exist in Chromium browsers.
+- Browsers with fingerprinting protection (Tor Browser, Brave, Firefox resist-fingerprinting, Safari) mask the GPU, round the screen or report UTC. That's the protection working, and the page reports it.
+- The rarity estimate uses rough shares and a crude overlap correction.
+- Real trackers use many more signals (fonts, audio, many WebGL parameters) plus your IP address.
 
 ## Roadmap
 
-- Add a few more signals, such as audio-context fingerprinting and font detection.
-- A "copy my results" button so people can compare browsers side by side.
-- A short explainer for each browser's built-in fingerprinting protection.
-- Automated checks with a headless browser in GitHub Actions.
+- A stable fingerprint ID you can compare in a private window, to show that tracking survives clearing cookies.
+- Font detection, to infer installed software (Office, Adobe, developer tools).
+- Per-browser fixes, with a re-check button.
+- Automated tests for `infer.js` in GitHub Actions.
 
 ## License
 
